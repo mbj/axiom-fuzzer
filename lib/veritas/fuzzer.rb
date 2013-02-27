@@ -22,12 +22,13 @@ module Veritas
         right_table = table(right.sort_by { right.header })
 
         sexp = Veritas::Sexp::Generator.visit(relation)
-        message = <<-OUTPUT.gsub(/^\s+/, '')
+
+        message = %W(
           Veritas-Relation:
           #{sexp.pretty_inspect}
           #{left_key} and #{right_key} are different:
           #{Diffy::Diff.new(left_table, right_table)}
-        OUTPUT
+        ).join("\n")
 
         raise message
       end
