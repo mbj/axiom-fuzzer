@@ -51,7 +51,7 @@ module Veritas
                 :relation_materialized => relation.materialize,
               }
 
-              assert_equality(relations, gateway.relation)
+              assert_equality(relations, relation)
 
               method, args, block = next_operation(relation, stack.length) if relation.any?
 
