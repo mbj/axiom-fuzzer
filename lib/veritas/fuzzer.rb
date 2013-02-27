@@ -1,4 +1,8 @@
 require 'veritas'
+require 'veritas-sexp'
+require 'terminal-table'
+require 'diffy'
+require 'pp'
 
 module Veritas
   class Fuzzer
@@ -6,6 +10,27 @@ module Veritas
 
     def self.run(*args)
       new(*args).run
+    end
+
+    def assert_equality(relations, relation)
+      relations.keys.permutation(2) do |(left_key, right_key)|
+        next if left_key < right_key
+        left, right = relations.values_at(left_key, right_key)
+        next if left == right
+     
+        left_table  = table(left.sort_by  { left.header  })
+        right_table = table(right.sort_by { right.header })
+
+        sexp = Veritas::Sexp::Generator.visit(relation)
+        message = <<-OUTPUT.gsub(/^\s+/, '')
+          Veritas-Relation:
+          #{sexp.pretty_inspect}
+          #{left_key} and #{right_key} are different:
+          #{Diffy::Diff.new(left_table, right_table)}
+        OUTPUT
+
+        raise message
+      end
     end
 
     def run
@@ -24,20 +49,8 @@ module Veritas
                 :gateway_materialized  => gateway.materialize,
                 :relation_materialized => relation.materialize,
               }
-             
-              relations.keys.permutation(2) do |(left_key, right_key)|
-                next if left_key < right_key
-                left, right = relations.values_at(left_key, right_key)
-                next if left == right
-             
-                left_table  = table(left.sort_by  { left.header  })
-                right_table = table(right.sort_by { right.header })
-             
-                raise <<-OUTPUT.gsub(/^\s+/, '')
-                  #{left_key} and #{right_key} are different:
-                  #{Diffy::Diff.new(left_table, right_table)}
-                OUTPUT
-              end
+
+              assert_equality(relations, gateway.relation)
 
               method, args, block = next_operation(relation, stack.length) if relation.any?
 
@@ -62,10 +75,8 @@ module Veritas
     end
 
     def next_operation(relation, level)
-      p relation.class
       # TODO: break this up into separate classes for each mutation
       #       and then randomly select the mutator class.
-     
       # TODO: add more operations
       method = [ 
         :project, 
