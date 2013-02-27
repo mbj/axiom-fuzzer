@@ -83,19 +83,18 @@ module Veritas
         :project, 
         :remove, 
         :extend, 
-    #   :join, 
-    #   :product, 
+        :join, 
+        :product, 
     #   :union, 
     #   :intersect, 
     #   :difference, 
         :restrict, 
-    #   :base 
       ].sample
 
       header      = relation.header
       header_size = header.to_a.size
       attributes  = header.to_a.sample(rand(header_size))
-     
+
       case method
       when nil
         nil  # do nothing
@@ -123,7 +122,7 @@ module Veritas
      
         [ :restrict, [], proc { predicate } ]
       when :join, :product, :union, :intersect, :difference
-        other_method, other_args, other_block = next_operation(relation)
+        other_method, other_args, other_block = next_operation(relation, level)
         return unless other_method
         right = relation.send(other_method, *other_args, &other_block) 
         [ :join, [ right ] ]
