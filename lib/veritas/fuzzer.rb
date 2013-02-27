@@ -43,7 +43,7 @@ module Veritas
 
         while element = stack.last
           begin
-            Timeout.timeout(1) do
+            Timeout.timeout(2) do
               gateway, relation = element
 
               relations = {
