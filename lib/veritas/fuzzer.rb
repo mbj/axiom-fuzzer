@@ -53,7 +53,7 @@ module Veritas
 
               assert_equality(relations, relation)
 
-              method, args, block = next_operation(relation, stack.length) if relation.any?
+              method, args, block = next_operation(gateway, stack.length) if relation.any?
 
               if method.nil?
                 stack.pop
