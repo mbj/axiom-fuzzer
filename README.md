@@ -14,6 +14,12 @@ The fuzzer will generate randomly structured veritas relation trees. These trees
 the database adapter. In case there are any difference one part of the implementation is doing something nasty and 
 might contain a bug.
 
+Usage
+-----
+
+The fuzzer is in spike mode, only [veritas-arango-adapter](https://github.com/mbj/veritas-arango-adapter) uses it in the current form.
+Instructions to use it with this adapter can be found in the adapters [README](https://github.com/mbj/veritas-arango-adapter#fuzzer).
+
 Installation
 ------------
 
