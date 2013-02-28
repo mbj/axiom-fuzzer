@@ -10,8 +10,8 @@ Fuzzer for veritas relations
 Rationale
 ---------
 
-The fuzzer will generate randomly structured veritas relation trees. These trees will get executed in-memory and via 
-the database adapter. In case there are any difference one part of the implementation is doing something nasty and 
+The fuzzer will generate randomly structured veritas relation trees. These trees will get executed in-memory and via
+the database adapter. In case there are any differences, one part of the implementation is doing something nasty and
 might contain a bug.
 
 Usage
@@ -25,8 +25,10 @@ Installation
 
 There is currently no gem release. Use git source in your Gemfile:
 
-`gem 'composition',            :git => 'https://github.com/mbj/composition.git'
-`gem 'veritas-fuzzer', :git => 'https://github.com/mbj/veritas-fuzzer.git'`
+```ruby
+gem 'composition',    :git => 'https://github.com/mbj/composition.git'
+gem 'veritas-fuzzer', :git => 'https://github.com/mbj/veritas-fuzzer.git'
+```
 
 Credits
 -------
