@@ -19,66 +19,70 @@ module Veritas
       new(*args).run
     end
 
+    def run
+      loop do
+        run_with_timeout
+      end
+    end
+
+  private
+
+    def assert_equal_key(left_key, right_key)
+      next if left_key < right_key
+      left, right = relations.values_at(left_key, right_key)
+      next if left == right
+   
+      left_table  = table(left.sort_by  { left.header  })
+      right_table = table(right.sort_by { right.header })
+
+      sexp = Veritas::Sexp::Generator.visit(relation)
+
+      raise %W(
+        Veritas-Relation:
+        #{sexp.pretty_inspect}
+        #{left_key} and #{right_key} are different:
+        #{Diffy::Diff.new(left_table, right_table)}
+      ).join("\n")
+    end
+
     def assert_equality(relations, relation)
       relations.keys.permutation(2) do |(left_key, right_key)|
-        next if left_key < right_key
-        left, right = relations.values_at(left_key, right_key)
-        next if left == right
-     
-        left_table  = table(left.sort_by  { left.header  })
-        right_table = table(right.sort_by { right.header })
-
-        sexp = Veritas::Sexp::Generator.visit(relation)
-
-        message = %W(
-          Veritas-Relation:
-          #{sexp.pretty_inspect}
-          #{left_key} and #{right_key} are different:
-          #{Diffy::Diff.new(left_table, right_table)}
-        ).join("\n")
-
-        raise message
       end
     end
 
     def run
-      start = [ [ gateway, relation ] ]
+      stack = [ [ gateway, relation ] ]
 
-      loop do
+      while element = stack.last
+        begin
+          Timeout.timeout(2) do
+            gateway, relation = element
 
-        stack = start.dup
+            relations = {
+              :gateway_materialized  => gateway.materialize,
+              :relation_materialized => relation.materialize,
+            }
 
-        while element = stack.last
-          begin
-            Timeout.timeout(2) do
-              gateway, relation = element
+            assert_equality(relations, relation)
 
-              relations = {
-                :gateway_materialized  => gateway.materialize,
-                :relation_materialized => relation.materialize,
-              }
+            method, args, block = next_operation(gateway, stack.length) if relation.any?
 
-              assert_equality(relations, relation)
-
-              method, args, block = next_operation(gateway, stack.length) if relation.any?
-
-              if method.nil?
-                stack.pop
-              else
-                stack << [
-                  gateway.send(method, *args, &block),
-                  relation.send(method, *args, &block),
-                ]
-              end
+            if method.nil?
+              stack.pop
+            else
+              stack << [
+                gateway.send(method, *args, &block),
+                relation.send(method, *args, &block),
+              ]
             end
-          rescue Timeout::Error
-            puts "timeout"
-            break
           end
-
-          puts stack.length
-
+        rescue Timeout::Error
+          puts "timeout"
+          break
         end
+
+        puts stack.length
+
       end
     end
 
