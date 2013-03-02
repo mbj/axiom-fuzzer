@@ -5,9 +5,16 @@ require 'diffy'
 require 'pp'
 
 module Veritas
+  # Fuzzer, to be broken up in much smaller parts
   class Fuzzer
     include Composition.new(:gateway, :relation)
 
+    # Run fuzzer
+    #
+    # @return [undefined]
+    # 
+    # @api private
+    #
     def self.run(*args)
       new(*args).run
     end
