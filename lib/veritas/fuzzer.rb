@@ -140,26 +140,3 @@ module Veritas
     end
   end
 end
-
-__END__
----
-- id: 1
-  name: Macie Deckow
-- id: 2
-  name: Desmond Gleichner
-- id: 3
-  name: Phil Krajcik
-- id: 4
-  name: Adolph McClure
-- id: 5
-  name: Trudy Torphy
-- id: 6
-  name: Vance Hegmann
-- id: 7
-  name: Lincoln Morissette
-- id: 8
-  name: Dexter Doyle
-- id: 9
-  name: Edgar Sanford
-- id: 10
-  name: Jasper Batz
