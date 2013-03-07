@@ -1,3 +1,6 @@
+require 'concord'
+require 'adamantium'
+require 'abstract_type'
 require 'veritas'
 require 'veritas-sexp'
 require 'terminal-table'
@@ -7,7 +10,7 @@ require 'pp'
 module Veritas
   # Fuzzer namespace
   class Fuzzer
-    include Composition.new(:gateway, :relation)
+    include Concord.new(:gateway, :relation)
 
     # Run fuzzer
     #

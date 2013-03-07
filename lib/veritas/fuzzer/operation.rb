@@ -2,7 +2,7 @@ module Veritas
   class Fuzzer
     # Abstract base class for fuzzing operations
     class Operation
-      include AbstractType, Adamantium::Flat, Composition.new(:relation, :level)
+      include AbstractType, Adamantium::Flat, Concord.new(:relation, :level)
 
       def self.next(*args)
         fuzzer = FUZZERS.sample
