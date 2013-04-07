@@ -55,7 +55,7 @@ LongMethod:
   max_statements: 5
   exclude: []
   enabled: true
-Duplication:
+DuplicateMethodCall:
   allow_calls: []
   exclude: []
   enabled: true
