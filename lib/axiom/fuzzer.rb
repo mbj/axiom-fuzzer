@@ -1,13 +1,13 @@
 require 'concord'
 require 'adamantium'
 require 'abstract_type'
-require 'veritas'
-require 'veritas-sexp'
+require 'axiom'
+require 'axiom-sexp'
 require 'terminal-table'
 require 'diffy'
 require 'pp'
 
-module Veritas
+module Axiom
   # Fuzzer namespace
   class Fuzzer
     include Concord.new(:gateway, :relation)
@@ -50,10 +50,10 @@ module Veritas
       left_table  = table(left.sort_by  { left.header  })
       right_table = table(right.sort_by { right.header })
 
-      sexp = Veritas::Sexp::Generator.visit(relation)
+      sexp = Axiom::Sexp::Generator.visit(relation)
 
       raise %W(
-        Veritas-Relation:
+        Axiom-Relation:
         #{sexp.pretty_inspect}
         #{left_key} and #{right_key} are different:
         #{Diffy::Diff.new(left_table, right_table)}
@@ -109,4 +109,4 @@ module Veritas
   end
 end
 
-require 'veritas/fuzzer/operation'
+require 'axiom/fuzzer/operation'
