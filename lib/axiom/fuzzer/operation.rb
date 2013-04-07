@@ -1,4 +1,4 @@
-module Veritas
+module Axiom
   class Fuzzer
     # Abstract base class for fuzzing operations
     class Operation
@@ -33,7 +33,7 @@ module Veritas
       class Extend < self
         def operation
           attribute = random_attribute
-          return unless attribute.kind_of?(Veritas::Attribute::Integer)
+          return unless attribute.kind_of?(Axiom::Attribute::Integer)
           operator = [ :*, :%, :+, :-].sample
           if operator == :%
             operand = [1, 2, -1].sample
@@ -59,7 +59,7 @@ module Veritas
 
       class Restriction < self
         def operation
-          predicate = attributes.reduce(Veritas::Function::Proposition::Tautology.new) do |predicate, attribute|
+          predicate = attributes.reduce(Axiom::Function::Proposition::Tautology.new) do |predicate, attribute|
             function = [ :eq, :ne, :gt, :gte, :lt, :lte ].sample
             value    = relation.map { |tuple| tuple[attribute] }.sample
             predicate.and(attribute.send(function, value))
