@@ -26,7 +26,6 @@ Installation
 There is currently no gem release. Use git source in your Gemfile:
 
 ```ruby
-gem 'composition',    :git => 'https://github.com/mbj/composition.git'
 gem 'axiom-fuzzer', :git => 'https://github.com/mbj/axiom-fuzzer.git'
 ```
 
